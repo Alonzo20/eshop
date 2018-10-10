@@ -2,3 +2,5 @@
 eshop-inventory/.classpath
 eshop-inventory/.project
 *.prefs
+eshop-cache/.classpath
+eshop-cache/.project
