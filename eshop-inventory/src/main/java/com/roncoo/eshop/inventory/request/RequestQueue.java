@@ -2,7 +2,9 @@ package com.roncoo.eshop.inventory.request;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 请求内存队列
@@ -16,6 +18,11 @@ public class RequestQueue {
 	 * 内存队列
 	 */
 	private List<ArrayBlockingQueue<Request>> queues = new ArrayList<ArrayBlockingQueue<Request>>();
+
+	/**
+	 * 标识位map
+	 */
+	private Map<Integer, Boolean> flagMap = new ConcurrentHashMap<Integer, Boolean>();
 
 	/**
 	 * 单例有很多种方式去实现：我采取绝对线程安全的一种方式
@@ -49,8 +56,33 @@ public class RequestQueue {
 		return Singleton.getInstance();
 	}
 
-	public void addQueue(ArrayBlockingQueue<Request> queue){
+	/**
+	 * 添加一个内存队列
+	 * 
+	 * @param queue
+	 */
+	public void addQueue(ArrayBlockingQueue<Request> queue) {
 		this.queues.add(queue);
 	}
 	
+	/**
+	 * 获取内存队列的数量
+	 * @return
+	 */
+	public int queueSize() {
+		return queues.size();
+	}
+
+	/**
+	 * 获取内存队列
+	 * @param index
+	 * @return
+	 */
+	public ArrayBlockingQueue<Request> getQueue(int index) {
+		return queues.get(index);
+	}
+	
+	public Map<Integer, Boolean> getFlagMap(){
+		return flagMap;
+	}
 }

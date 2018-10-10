@@ -59,6 +59,10 @@ public class Application {
 		return jedisCluster;
 	}
 
+	/**
+     * 注册监听器
+     * @return
+     */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Bean
 	public ServletListenerRegistrationBean servletListenerRegistrationBean() {

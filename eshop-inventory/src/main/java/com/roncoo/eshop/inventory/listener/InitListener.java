@@ -13,14 +13,14 @@ import com.roncoo.eshop.inventory.thread.RequestProcessorThreadPool;
 public class InitListener implements ServletContextListener {
 
 	@Override
-	public void contextDestroyed(ServletContextEvent arg0) {
+	public void contextInitialized(ServletContextEvent sce) {
 		// 初始化工作线程池和内存队列
 		RequestProcessorThreadPool.init();
 	}
 
 	@Override
-	public void contextInitialized(ServletContextEvent arg0) {
-
+	public void contextDestroyed(ServletContextEvent sce) {
+		
 	}
 
 }
