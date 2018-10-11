@@ -10,6 +10,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.embedded.ServletListenerRegistrationBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,6 +20,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisCluster;
+
+import com.roncoo.eshop.cache.listener.InitListener;
 
 @EnableAutoConfiguration
 @SpringBootApplication
@@ -54,6 +57,15 @@ public class Application {
 		jedisClusterNodes.add(new HostAndPort("192.168.2.103", 7005));
 		JedisCluster jedisCluster = new JedisCluster(jedisClusterNodes);
         return jedisCluster;
+    }
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Bean
+    public ServletListenerRegistrationBean servletListenerRegistrationBean() {
+    	ServletListenerRegistrationBean servletListenerRegistrationBean = 
+    			new ServletListenerRegistrationBean();
+    	servletListenerRegistrationBean.setListener(new InitListener());  
+    	return servletListenerRegistrationBean;
     }
 
     public static void main(String[] args) {
