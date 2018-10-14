@@ -39,7 +39,7 @@ public class CacheController {
 	@RequestMapping("/getProductInfo")
 	@ResponseBody
 	public ProductInfo getProductInfo(Long productId) {
-ProductInfo productInfo = null;
+		ProductInfo productInfo = null;
 		
 		productInfo = cacheService.getProductInfoFromReidsCache(productId);
 		System.out.println("=================从redis中获取缓存，商品信息=" + productInfo);   
