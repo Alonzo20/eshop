@@ -59,14 +59,14 @@ public class Application {
         return jedisCluster;
     }
 	
-	/*@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Bean
     public ServletListenerRegistrationBean servletListenerRegistrationBean() {
     	ServletListenerRegistrationBean servletListenerRegistrationBean = 
     			new ServletListenerRegistrationBean();
     	servletListenerRegistrationBean.setListener(new InitListener());  
     	return servletListenerRegistrationBean;
-    }*/
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
