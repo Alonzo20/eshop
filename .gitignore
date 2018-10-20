@@ -6,3 +6,5 @@ eshop-cache/.classpath
 eshop-cache/.project
 storm-helloworld/storm-wordcount/.classpath
 storm-helloworld/storm-wordcount/.project
+storm-helloworld/.classpath
+storm-helloworld/.project
