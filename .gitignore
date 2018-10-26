@@ -9,3 +9,6 @@ storm-helloworld/storm-wordcount/.project
 storm-helloworld/.classpath
 storm-helloworld/.project
 storm-helloworld/dependency-reduced-pom.xml
+eshop-storm/.project
+eshop-storm/.classpath
+storm-helloworld/logs/workers-artifacts/WordCountTopology-1-1540439410/1024/worker.yaml
