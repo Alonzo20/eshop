@@ -8,6 +8,7 @@ import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooDefs.Ids;
 import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.data.Stat;
 
 /**
  * ZooKeeperSession
@@ -15,21 +16,21 @@ import org.apache.zookeeper.ZooKeeper;
  *
  */
 public class ZooKeeperSession {
-
+	
 	private static CountDownLatch connectedSemaphore = new CountDownLatch(1);
 	
-	private ZooKeeper zooKeeper;
-	
-	public ZooKeeperSession(){
+	private ZooKeeper zookeeper;
+
+	public ZooKeeperSession() {
 		// 去连接zookeeper server，创建会话的时候，是异步去进行的
 		// 所以要给一个监听器，说告诉我们什么时候才是真正完成了跟zk server的连接
 		try {
-			this.zooKeeper = new ZooKeeper(
-					"192.168.2.101:2181,192.168.2.102:2181,192.168.2.103:2181", 
+			this.zookeeper = new ZooKeeper(
+					"192.168.31.187:2181,192.168.31.19:2181,192.168.31.227:2181", 
 					50000, 
 					new ZooKeeperWatcher());
 			// 给一个状态CONNECTING，连接中
-			System.out.println(zooKeeper.getState());
+			System.out.println(zookeeper.getState());
 			
 			try {
 				// CountDownLatch
@@ -45,7 +46,7 @@ public class ZooKeeperSession {
 			} catch(InterruptedException e) {
 				e.printStackTrace();
 			}
-			
+
 			System.out.println("ZooKeeper session established......");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -58,18 +59,19 @@ public class ZooKeeperSession {
 	 */
 	public void acquireDistributedLock(Long productId) {
 		String path = "/product-lock-" + productId;
-		
+	
 		try {
-			zooKeeper.create(path, "".getBytes(),
-					Ids.OPEN_ACL_UNSAFE,CreateMode.EPHEMERAL);
+			zookeeper.create(path, "".getBytes(), 
+					Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+			System.out.println("success to acquire lock for product[id=" + productId + "]");  
 		} catch (Exception e) {
 			// 如果那个商品对应的锁的node，已经存在了，就是已经被别人加锁了，那么就这里就会报错
 			// NodeExistsException
 			int count = 0;
-			while(true){
+			while(true) {
 				try {
-					Thread.sleep(1000);
-					zooKeeper.create(path, "".getBytes(),
+					Thread.sleep(1000); 
+					zookeeper.create(path, "".getBytes(), 
 							Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
 				} catch (Exception e2) {
 					count++;
@@ -83,15 +85,99 @@ public class ZooKeeperSession {
 	}
 	
 	/**
+	 * 获取分布式锁
+	 * @param productId
+	 */
+	public void acquireDistributedLock(String path) {
+		try {
+			zookeeper.create(path, "".getBytes(), 
+					Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+			System.out.println("success to acquire lock for " + path);  
+		} catch (Exception e) {
+			// 如果那个商品对应的锁的node，已经存在了，就是已经被别人加锁了，那么就这里就会报错
+			// NodeExistsException
+			int count = 0;
+			while(true) {
+				try {
+					Thread.sleep(1000); 
+					zookeeper.create(path, "".getBytes(), 
+							Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+				} catch (Exception e2) {
+					count++;
+					System.out.println("the " + count + " times try to acquire lock for " + path + "......");
+					continue;
+				}
+				System.out.println("success to acquire lock for " + path + " after " + count + " times try......");
+				break;
+			}
+		}
+	}
+	
+	/**
+	 * 获取分布式锁
+	 * @param productId
+	 */
+	public boolean acquireFastFailedDistributedLock(String path) {
+		try {
+			zookeeper.create(path, "".getBytes(), 
+					Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+			System.out.println("success to acquire lock for " + path);  
+			return true;
+		} catch (Exception e) {
+			System.out.println("fail to acquire lock for " + path);  
+		}
+		return false;
+	}
+	
+	/**
 	 * 释放掉一个分布式锁
 	 * @param productId
 	 */
 	public void releaseDistributedLock(Long productId) {
 		String path = "/product-lock-" + productId;
 		try {
-			zooKeeper.delete(path, -1);
+			zookeeper.delete(path, -1); 
+			System.out.println("release the lock for product[id=" + productId + "]......");  
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 释放掉一个分布式锁
+	 * @param productId
+	 */
+	public void releaseDistributedLock(String path) {
+		try {
+			zookeeper.delete(path, -1); 
+			System.out.println("release the lock for " + path + "......");  
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String getNodeData(String path) {
+		try {
+			return new String(zookeeper.getData(path, false, new Stat())); 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
+	public void setNodeData(String path, String data) {
+		try {
+			zookeeper.setData(path, data.getBytes(), -1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void createNode(String path) {
+		try {
+			zookeeper.create(path, "".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+		} catch (Exception e) {
+			
 		}
 	}
 	
@@ -102,13 +188,13 @@ public class ZooKeeperSession {
 	 */
 	private class ZooKeeperWatcher implements Watcher {
 
-		@Override
 		public void process(WatchedEvent event) {
 			System.out.println("Receive watched event: " + event.getState());
-			if(KeeperState.SyncConnected == event.getState()){
+			if(KeeperState.SyncConnected == event.getState()) {
 				connectedSemaphore.countDown();
-			}
+			} 
 		}
+		
 	}
 	
 	/**
@@ -120,13 +206,14 @@ public class ZooKeeperSession {
 		
 		private static ZooKeeperSession instance;
 		
-		static{
+		static {
 			instance = new ZooKeeperSession();
 		}
 		
-		public static ZooKeeperSession getInstance(){
+		public static ZooKeeperSession getInstance() {
 			return instance;
 		}
+		
 	}
 	
 	/**
