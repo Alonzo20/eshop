@@ -12,3 +12,7 @@ storm-helloworld/dependency-reduced-pom.xml
 eshop-storm/.project
 eshop-storm/.classpath
 storm-helloworld/logs/workers-artifacts/WordCountTopology-1-1540439410/1024/worker.yaml
+eshop-cache-ha/.classpath
+eshop-cache-ha/.project
+eshop-product-ha/.classpath
+eshop-product-ha/.project
