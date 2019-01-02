@@ -3,9 +3,6 @@ package com.roncoo.eshop.cache.kafka;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import kafka.consumer.ConsumerIterator;
-import kafka.consumer.KafkaStream;
-
 import com.alibaba.fastjson.JSONObject;
 import com.roncoo.eshop.cache.model.ProductInfo;
 import com.roncoo.eshop.cache.model.ShopInfo;
@@ -13,16 +10,19 @@ import com.roncoo.eshop.cache.service.CacheService;
 import com.roncoo.eshop.cache.spring.SpringContext;
 import com.roncoo.eshop.cache.zk.ZooKeeperSession;
 
+import kafka.consumer.ConsumerIterator;
+import kafka.consumer.KafkaStream;
+
 /**
  * kafka消息处理线程
  * @author Administrator
  *
  */
 @SuppressWarnings("rawtypes")
-public class KafkaMessageProcessor implements Runnable{
-
-	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+public class KafkaMessageProcessor implements Runnable {
 	
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 	private KafkaStream kafkaStream;
 	private CacheService cacheService;
 	
@@ -35,25 +35,24 @@ public class KafkaMessageProcessor implements Runnable{
 	@SuppressWarnings("unchecked")
 	public void run() {
 		ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
-		while(it.hasNext()){
-			String message = new String(it.next().message());
-			
-			// 首先将message转换成json对象
-			JSONObject messageJSONObject = JSONObject.parseObject(message);
-			
-			// 从这里提取出消息对应的服务的标识
-			String serviceId = messageJSONObject.getString("serviceId");
-			
-			// 如果是商品信息服务
+        while (it.hasNext()) {
+        	String message = new String(it.next().message());
+        	
+        	// 首先将message转换成json对象
+        	JSONObject messageJSONObject = JSONObject.parseObject(message);
+        	
+        	// 从这里提取出消息对应的服务的标识
+        	String serviceId = messageJSONObject.getString("serviceId");  
+        	
+        	// 如果是商品信息服务
         	if("productInfoService".equals(serviceId)) {
         		processProductInfoChangeMessage(messageJSONObject);
         	} else if("shopInfoService".equals(serviceId)) {
         		processShopInfoChangeMessage(messageJSONObject);  
         	}
-			
-		}
+        }
 	}
-
+	
 	/**
 	 * 处理商品信息变更的消息
 	 * @param messageJSONObject
@@ -70,7 +69,7 @@ public class KafkaMessageProcessor implements Runnable{
 		// 你从一个课程里，还是学到的是里面围绕的讲解的一些核心的知识
 		// 缓存架构：高并发、高性能、海量数据，等场景
 		
-		String productInfoJSON = "{\"id\": 7, \"name\": \"iphone7手机\", \"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iphone7的规格\", \"service\": \"iphone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", \"shopId\": 1, \"modifiedTime\": \"2017-01-01 12:00:00\"}";
+		String productInfoJSON = "{\"id\": 5, \"name\": \"iphone7手机\", \"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iphone7的规格\", \"service\": \"iphone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", \"shopId\": 1, \"modifiedTime\": \"2017-01-01 12:00:00\"}";
 		ProductInfo productInfo = JSONObject.parseObject(productInfoJSON, ProductInfo.class);
 		
 		
@@ -111,13 +110,14 @@ public class KafkaMessageProcessor implements Runnable{
 		cacheService.saveProductInfo2ReidsCache(productInfo);  
 		
 		// 释放分布式锁
-		zkSession.releaseDistributedLock(productId);  
+		zkSession.releaseDistributedLock(productId); 
 	}
 	
 	/**
 	 * 处理店铺信息变更的消息
 	 * @param messageJSONObject
 	 */
+	@SuppressWarnings("unused")
 	private void processShopInfoChangeMessage(JSONObject messageJSONObject) {
 		// 提取出商品id
 		Long productId = messageJSONObject.getLong("productId");
@@ -137,7 +137,5 @@ public class KafkaMessageProcessor implements Runnable{
 		System.out.println("===================获取刚保存到本地缓存的店铺信息：" + cacheService.getShopInfoFromLocalCache(shopId));   
 		cacheService.saveShopInfo2ReidsCache(shopInfo);  
 	}
-
-	
 
 }

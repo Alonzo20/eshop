@@ -10,14 +10,12 @@ import kafka.consumer.ConsumerConfig;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 
-
-
 /**
  * kafka消费者
  * @author Administrator
  *
  */
-public class KafkaConsumer implements Runnable{
+public class KafkaConsumer implements Runnable {
 
 	private ConsumerConnector consumerConnector;
 	private String topic;
@@ -29,11 +27,10 @@ public class KafkaConsumer implements Runnable{
 	}
 	
 	@SuppressWarnings("rawtypes")
-	@Override
 	public void run() {
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-		topicCountMap.put(topic, 1);
-		
+        topicCountMap.put(topic, 1);
+        
         Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = 
         		consumerConnector.createMessageStreams(topicCountMap);
         List<KafkaStream<byte[], byte[]>> streams = consumerMap.get(topic);
@@ -42,20 +39,19 @@ public class KafkaConsumer implements Runnable{
             new Thread(new KafkaMessageProcessor(stream)).start();
         }
 	}
-
 	
 	/**
 	 * 创建kafka cosumer config
 	 * @return
 	 */
 	private static ConsumerConfig createConsumerConfig() {
-		Properties props = new Properties();
-		props.put("zookeeper.connect", "192.168.2.101:2181,192.168.2.102:2181,192.168.2.103:2181");
+        Properties props = new Properties();
+        props.put("zookeeper.connect", "192.168.31.187:2181,192.168.31.19:2181,192.168.31.227:2181");
         props.put("group.id", "eshop-cache-group");
         props.put("zookeeper.session.timeout.ms", "40000");
         props.put("zookeeper.sync.time.ms", "200");
         props.put("auto.commit.interval.ms", "1000");
         return new ConsumerConfig(props);
-	}
-	
+    }
+
 }

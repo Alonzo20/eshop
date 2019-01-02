@@ -10,8 +10,8 @@ import org.springframework.context.ApplicationContext;
 public class SpringContext {
 
 	private static ApplicationContext applicationContext;
-	
-	public static ApplicationContext getApplicationContext(){
+
+	public static ApplicationContext getApplicationContext() {
 		return applicationContext;
 	}
 

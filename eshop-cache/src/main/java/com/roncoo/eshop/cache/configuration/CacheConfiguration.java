@@ -9,7 +9,6 @@ import org.springframework.core.io.ClassPathResource;
 
 /**
  * 缓存配置管理类
- * 
  * @author Administrator
  *
  */
@@ -20,14 +19,14 @@ public class CacheConfiguration {
 	@Bean
 	public EhCacheManagerFactoryBean ehCacheManagerFactoryBean() {
 		EhCacheManagerFactoryBean ehCacheManagerFactoryBean = new EhCacheManagerFactoryBean();
-		ehCacheManagerFactoryBean.setConfigLocation(new ClassPathResource("ehcache.xml"));
+		ehCacheManagerFactoryBean.setConfigLocation(new ClassPathResource("ehcache.xml"));   
 		ehCacheManagerFactoryBean.setShared(true);
-		return ehCacheManagerFactoryBean;	
+		return ehCacheManagerFactoryBean;
 	}
 	
 	@Bean
-	public EhCacheCacheManager ehCacheCacheManager(EhCacheManagerFactoryBean ehCacheManagerFactoryBean){
+	public EhCacheCacheManager ehCacheCacheManager(EhCacheManagerFactoryBean ehCacheManagerFactoryBean) {
 		return new EhCacheCacheManager(ehCacheManagerFactoryBean.getObject());
 	}
-
+	
 }

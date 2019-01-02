@@ -4,7 +4,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import com.roncoo.eshop.cache.model.ProductInfo;
 
-
 /**
  * 重建缓存的内存队列
  * @author Administrator
@@ -13,16 +12,16 @@ import com.roncoo.eshop.cache.model.ProductInfo;
 public class RebuildCacheQueue {
 
 	private ArrayBlockingQueue<ProductInfo> queue = new ArrayBlockingQueue<ProductInfo>(1000);
-
-	public void putProductInfo(ProductInfo productInfo){
+	
+	public void putProductInfo(ProductInfo productInfo) {
 		try {
-			queue.put(productInfo);
+			queue.put(productInfo); 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public ProductInfo takeProductInfo(){
+	public ProductInfo takeProductInfo() {
 		try {
 			return queue.take();
 		} catch (Exception e) {
@@ -57,4 +56,5 @@ public class RebuildCacheQueue {
 	public static void init() {
 		getInstance();
 	}
+	
 }

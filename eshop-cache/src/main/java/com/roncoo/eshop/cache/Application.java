@@ -18,24 +18,24 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.roncoo.eshop.cache.listener.InitListener;
+
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisCluster;
-
-import com.roncoo.eshop.cache.listener.InitListener;
 
 @EnableAutoConfiguration
 @SpringBootApplication
 @ComponentScan
 @MapperScan("com.roncoo.eshop.cache.mapper")
 public class Application {
-
-	@Bean
+ 
+    @Bean
     @ConfigurationProperties(prefix="spring.datasource")
-	public DataSource dataSource() {
+    public DataSource dataSource() {
         return new org.apache.tomcat.jdbc.pool.DataSource();
-	}
-	
-	@Bean
+    }
+    
+    @Bean
     public SqlSessionFactory sqlSessionFactoryBean() throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource());
@@ -43,23 +43,23 @@ public class Application {
         sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:/mybatis/*.xml"));
         return sqlSessionFactoryBean.getObject();
     }
-	
-	@Bean
-	public PlatformTransactionManager transactionManager(){
-		return new DataSourceTransactionManager(dataSource());
-	}
-	
-	@Bean
+ 
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        return new DataSourceTransactionManager(dataSource());
+    }
+    
+    @Bean
     public JedisCluster JedisClusterFactory() {
         Set<HostAndPort> jedisClusterNodes = new HashSet<HostAndPort>();
-        jedisClusterNodes.add(new HostAndPort("192.168.2.101", 7001));
-		jedisClusterNodes.add(new HostAndPort("192.168.2.102", 7003));
-		jedisClusterNodes.add(new HostAndPort("192.168.2.103", 7005));
-		JedisCluster jedisCluster = new JedisCluster(jedisClusterNodes);
+        jedisClusterNodes.add(new HostAndPort("192.168.31.19", 7003));
+        jedisClusterNodes.add(new HostAndPort("192.168.31.19", 7004));
+        jedisClusterNodes.add(new HostAndPort("192.168.31.227", 7006));
+        JedisCluster jedisCluster = new JedisCluster(jedisClusterNodes);
         return jedisCluster;
     }
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+    
+    @SuppressWarnings({ "rawtypes", "unchecked" })
 	@Bean
     public ServletListenerRegistrationBean servletListenerRegistrationBean() {
     	ServletListenerRegistrationBean servletListenerRegistrationBean = 
@@ -71,5 +71,5 @@ public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
-	
+    
 }

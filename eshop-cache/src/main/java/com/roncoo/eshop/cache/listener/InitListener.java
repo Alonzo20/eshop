@@ -26,7 +26,7 @@ public class InitListener implements ServletContextListener {
 		
 		new Thread(new KafkaConsumer("cache-message")).start();
 		new Thread(new RebuildCacheThread()).start();
-
+		
 		ZooKeeperSession.init();
 	}
 	
