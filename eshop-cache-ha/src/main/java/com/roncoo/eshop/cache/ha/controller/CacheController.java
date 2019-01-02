@@ -39,7 +39,7 @@ public class CacheController {
 	 */
 	@RequestMapping("/getProductInfo")
 	@ResponseBody
-	public String getProductInfo(Long productId) {
+	public ProductInfo getProductInfo(Long productId) {
 		// 拿到一个商品id
 		// 调用商品服务的接口，获取商品id对应的商品的最新数据
 		// 用HttpClient去调用商品服务的http接口
@@ -65,7 +65,8 @@ public class CacheController {
 //		}
 		
 		System.out.println(productInfo);  
-		return "success";
+		
+		return productInfo;
 	}
 	
 	/**
