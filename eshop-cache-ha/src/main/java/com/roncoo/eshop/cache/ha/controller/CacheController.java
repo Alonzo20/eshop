@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.roncoo.eshop.cache.ha.http.HttpClientUtils;
+import com.roncoo.eshop.cache.ha.hystrix.command.GetBrandNameCommand;
 import com.roncoo.eshop.cache.ha.hystrix.command.GetCityNameCommand;
 import com.roncoo.eshop.cache.ha.hystrix.command.GetProductInfoCommand;
 import com.roncoo.eshop.cache.ha.model.ProductInfo;
@@ -50,6 +51,11 @@ public class CacheController {
 		String cityName = getCityNameCommand.execute();
 		productInfo.setCityName(cityName); 
 		
+		Long brandId = productInfo.getBrandId();
+		GetBrandNameCommand getBrandNameCommand = new GetBrandNameCommand(brandId);
+		String brandName = getBrandNameCommand.execute();
+		productInfo.setBrandName(brandName);
+		 
 //		Future<ProductInfo> future = getProductInfoCommand.queue();
 //		try {
 //			Thread.sleep(1000); 
