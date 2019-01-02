@@ -5,6 +5,7 @@ import com.netflix.hystrix.HystrixCommandGroupKey;
 
 public class UpdateProductInfoCommand extends HystrixCommand<Boolean> {
 
+	@SuppressWarnings("unused")
 	private Long productId;
 	
 	public UpdateProductInfoCommand(Long productId) {
@@ -15,7 +16,7 @@ public class UpdateProductInfoCommand extends HystrixCommand<Boolean> {
 	@Override
 	protected Boolean run() throws Exception {
 		// 执行一次商品信息的更新
-		GetProductInfoCommand.flushCache(productId);  
+//		GetProductInfoCommand.flushCache(productId);  
 		return true;
 	}  
 
