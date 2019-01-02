@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.netflix.hystrix.HystrixCommand;
+import com.roncoo.eshop.cache.ha.degrade.IsDegrade;
 import com.roncoo.eshop.cache.ha.http.HttpClientUtils;
 import com.roncoo.eshop.cache.ha.hystrix.command.GetBrandNameCommand;
 import com.roncoo.eshop.cache.ha.hystrix.command.GetCityNameCommand;
@@ -126,6 +127,13 @@ public class CacheController {
 			e.printStackTrace();
 		}
 		
+		return "success";
+	}
+	
+	@RequestMapping("/isDegrade")
+	@ResponseBody
+	public String isDegrade(boolean degrade) {
+		IsDegrade.setDegrade(degrade); 
 		return "success";
 	}
 	
