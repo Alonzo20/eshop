@@ -7,7 +7,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandKey;
+import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.HystrixThreadPoolKey;
+import com.netflix.hystrix.HystrixThreadPoolProperties;
 import com.roncoo.eshop.cache.ha.cache.local.BrandCache;
 import com.roncoo.eshop.cache.ha.cache.local.LocationCache;
 import com.roncoo.eshop.cache.ha.http.HttpClientUtils;
@@ -25,21 +27,24 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
 	private Long productId;
 	
 	public GetProductInfoCommand(Long productId) {
-//		super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("ProductInfoService"))
-//				.andCommandKey(KEY)
-//				.andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey("GetProductInfoPool"))
-//				.andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()
-//						.withCoreSize(10)
-//						.withMaxQueueSize(12)
-//						.withQueueSizeRejectionThreshold(15)) 
-//				.andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
-//						.withCircuitBreakerRequestVolumeThreshold(30)
-//						.withCircuitBreakerErrorThresholdPercentage(40)
-//						.withCircuitBreakerSleepWindowInMilliseconds(3000)
-//						.withExecutionTimeoutInMilliseconds(500)
-//						.withFallbackIsolationSemaphoreMaxConcurrentRequests(30))  
-//				);  
-		super(HystrixCommandGroupKey.Factory.asKey("ProductInfoService"));
+		super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("ProductInfoService"))
+				.andCommandKey(KEY)
+				.andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey("GetProductInfoPool"))
+				.andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()
+						.withCoreSize(3)
+						.withMaximumSize(30) 
+						.withAllowMaximumSizeToDivergeFromCoreSize(true) 
+						.withKeepAliveTimeMinutes(1) 
+						.withMaxQueueSize(12)
+						.withQueueSizeRejectionThreshold(15)) 
+				.andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
+						.withCircuitBreakerRequestVolumeThreshold(30)
+						.withCircuitBreakerErrorThresholdPercentage(40)
+						.withCircuitBreakerSleepWindowInMilliseconds(3000)
+						.withExecutionTimeoutInMilliseconds(500)
+						.withFallbackIsolationSemaphoreMaxConcurrentRequests(30))
+				);  
+//		super(HystrixCommandGroupKey.Factory.asKey("ProductInfoService"));
 		this.productId = productId;
 	}
 	

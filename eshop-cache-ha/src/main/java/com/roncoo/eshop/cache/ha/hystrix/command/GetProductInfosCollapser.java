@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSONArray;
 import com.netflix.hystrix.HystrixCollapser;
+import com.netflix.hystrix.HystrixCollapserKey;
+import com.netflix.hystrix.HystrixCollapserProperties;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandKey;
@@ -16,6 +18,10 @@ public class GetProductInfosCollapser extends HystrixCollapser<List<ProductInfo>
 	private Long productId;
 	
 	public GetProductInfosCollapser(Long productId) {
+		super(Setter.withCollapserKey(HystrixCollapserKey.Factory.asKey("GetProductInfosCollapser"))
+				.andCollapserPropertiesDefaults(HystrixCollapserProperties.Setter()
+						   .withMaxRequestsInBatch(100)
+						   .withTimerDelayInMilliseconds(20))); 
 		this.productId = productId;
 	}
 	
