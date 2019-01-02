@@ -5,6 +5,7 @@ import redis.clients.jedis.JedisCluster;
 import com.alibaba.fastjson.JSONObject;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandProperties;
 import com.roncoo.eshop.cache.model.ShopInfo;
 import com.roncoo.eshop.cache.spring.SpringContext;
 
@@ -13,7 +14,13 @@ public class GetShopInfoFromReidsCacheCommand extends HystrixCommand<ShopInfo> {
 	private Long shopId;
 	
 	public GetShopInfoFromReidsCacheCommand(Long shopId) {
-		super(HystrixCommandGroupKey.Factory.asKey("RedisGroup"));
+		super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("RedisGroup"))
+				.andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
+						.withExecutionTimeoutInMilliseconds(100)
+						.withCircuitBreakerRequestVolumeThreshold(1000)
+						.withCircuitBreakerErrorThresholdPercentage(70)
+						.withCircuitBreakerSleepWindowInMilliseconds(60 * 1000))
+				);  
 		this.shopId = shopId;
 	}
 	
