@@ -28,5 +28,10 @@ public class GetShopInfoFromReidsCacheCommand extends HystrixCommand<ShopInfo> {
 		}
 		return null;
 	} 
+	
+	@Override
+	protected ShopInfo getFallback() {
+		return null;
+	}
 
 }
