@@ -31,7 +31,7 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
 						.withCircuitBreakerRequestVolumeThreshold(30)
 						.withCircuitBreakerErrorThresholdPercentage(40)
 						.withCircuitBreakerSleepWindowInMilliseconds(3000)
-						.withExecutionTimeoutInMilliseconds(20000)
+						.withExecutionTimeoutInMilliseconds(500)
 						.withFallbackIsolationSemaphoreMaxConcurrentRequests(30))  
 				);  
 		this.productId = productId;
@@ -47,6 +47,10 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
 		
 		if(productId.equals(-2L)) {
 			Thread.sleep(3000);  
+		}
+		
+		if(productId.equals(-3L)) {
+//			Thread.sleep(250); 
 		}
 		
 		String url = "http://127.0.0.1:8082/getProductInfo?productId=" + productId;
