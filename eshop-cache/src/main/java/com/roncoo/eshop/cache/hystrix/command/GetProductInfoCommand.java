@@ -25,9 +25,17 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfo> {
 	
 	@Override
 	protected ProductInfo run() throws Exception {
-		// 发送http或rpc接口调用，去调用商品服务的接口
-		String productInfoJSON = "{\"id\": " + productId + ", \"name\": \"iphone7手机\", \"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iphone7的规格\", \"service\": \"iphone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", \"shopId\": 1, \"modifiedTime\": \"2017-01-01 12:01:00\"}";
-		return JSONObject.parseObject(productInfoJSON, ProductInfo.class);
+		if(productId == 100) {
+			// 我们在这里模拟的是说，从源头服务某个商品id没有查询到数据，我们这里写死了，比如就是proudctId=100
+			// 在实际的生产环境中，我们其实是如果没有查询到数据，就给返回这么一个商品信息就可以了
+			ProductInfo productInfo = new ProductInfo();
+			productInfo.setId(productId);
+			return productInfo;
+		} else {
+			// 发送http或rpc接口调用，去调用商品服务的接口
+			String productInfoJSON = "{\"id\": " + productId + ", \"name\": \"iphone7手机\", \"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iphone7的规格\", \"service\": \"iphone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", \"shopId\": 1, \"modifiedTime\": \"2017-01-01 12:01:00\"}";
+			return JSONObject.parseObject(productInfoJSON, ProductInfo.class);
+		}
 	} 
 	
 	@Override
