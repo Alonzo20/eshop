@@ -17,6 +17,8 @@ public class ProductInfo {
 	private String size;
 	private Long shopId;
 	private String modifiedTime;
+	private Long cityId;
+	private String cityName;
 	
 	public ProductInfo() {
 		
@@ -96,6 +98,22 @@ public class ProductInfo {
 	public void setModifiedTime(String modifiedTime) {
 		this.modifiedTime = modifiedTime;
 	}
+	
+	public Long getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(Long cityId) {
+		this.cityId = cityId;
+	}
+	
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
 
 	@Override
 	public String toString() {
@@ -103,7 +121,8 @@ public class ProductInfo {
 				+ ", pictureList=" + pictureList + ", specification="
 				+ specification + ", service=" + service + ", color=" + color
 				+ ", size=" + size + ", shopId=" + shopId + ", modifiedTime="
-				+ modifiedTime + "]";
+				+ modifiedTime + ", cityId=" + cityId + ", cityName="
+				+ cityName + "]";
 	}
-
+	
 }
