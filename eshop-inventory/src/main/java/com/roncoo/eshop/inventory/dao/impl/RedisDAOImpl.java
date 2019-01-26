@@ -28,4 +28,5 @@ public class RedisDAOImpl implements RedisDAO {
 	public void delete(String key) {
 		jedisCluster.del(key);
 	}
+
 }

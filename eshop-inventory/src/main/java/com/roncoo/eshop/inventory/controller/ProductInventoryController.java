@@ -83,7 +83,7 @@ public class ProductInventoryController {
 	@ResponseBody
 	public ProductInventory getProductInventory(Integer productId) {
 		System.out.println("===========日志===========: 接收到一个商品库存的读请求，商品id=" + productId);  
-	
+		
 		ProductInventory productInventory = null;
 		
 		try {
@@ -98,7 +98,7 @@ public class ProductInventoryController {
 			long waitTime = 0L;
 			
 			// 等待超过200ms没有从缓存中获取到结果
-			while(true){
+			while(true) {
 //				if(waitTime > 25000) {
 //					break;
 //				}
@@ -138,6 +138,5 @@ public class ProductInventoryController {
 		
 		return new ProductInventory(productId, -1L);  
 	}
-	
 	
 }

@@ -6,8 +6,8 @@ import javax.servlet.ServletContextListener;
 import com.roncoo.eshop.inventory.thread.RequestProcessorThreadPool;
 
 /**
- * 系统初始化监听器	
- * @author alonzo
+ * 系统初始化监听器
+ * @author Administrator
  *
  */
 public class InitListener implements ServletContextListener {
@@ -17,7 +17,7 @@ public class InitListener implements ServletContextListener {
 		// 初始化工作线程池和内存队列
 		RequestProcessorThreadPool.init();
 	}
-
+	
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		

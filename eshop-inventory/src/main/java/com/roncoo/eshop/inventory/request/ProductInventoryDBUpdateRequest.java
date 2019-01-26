@@ -38,7 +38,7 @@ import com.roncoo.eshop.inventory.service.ProductInventoryService;
  * @author Administrator
  *
  */
-public class ProductInventoryDBUpdateRequest implements Request{
+public class ProductInventoryDBUpdateRequest implements Request {
 
 	/**
 	 * 商品库存
@@ -67,12 +67,14 @@ public class ProductInventoryDBUpdateRequest implements Request{
 //			e.printStackTrace();
 //		} 
 		// 修改数据库中的库存
-		productInventoryService.updateProductInventory(productInventory);  		
+		productInventoryService.updateProductInventory(productInventory);  
 	}
-
-	@Override
+	
+	/**
+	 * 获取商品id
+	 */
 	public Integer getProductId() {
 		return productInventory.getProductId();
 	}
-
+	
 }
